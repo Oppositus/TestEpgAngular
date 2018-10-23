@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EpgTimescaleComponent implements OnInit {
 
-  protected isCerrentTimeVisible = true;
+  protected isCurrentTimeVisible = true;
 
   constructor() { }
 
