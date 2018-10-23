@@ -1,0 +1,7 @@
+@import "../assets/definitions";
+
+.app {
+  @include maxscreen;
+  background-color: $background;
+  overflow: hidden;
+}

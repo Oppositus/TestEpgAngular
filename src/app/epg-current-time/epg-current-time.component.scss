@@ -1,0 +1,32 @@
+@import "../../assets/definitions";
+
+.current-time {
+
+  position: absolute;
+  left: 0;
+  top: 80px;
+  width: $max-width;
+  height: $max-height - 80px;
+
+  & > * {
+    position: relative;
+  }
+
+  .time {
+    color: $text;
+    margin-left: -20px;
+  }
+
+  .arrow {
+    background-color: $selected;
+    width: 10px;
+    height: 10px;
+    margin-left: -4px;
+  }
+
+  .line {
+    width: 2px;
+    height: 100px;
+    background-color: $selected;
+  }
+}

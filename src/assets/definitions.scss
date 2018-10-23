@@ -1,0 +1,17 @@
+$max-width: 1280px;
+$max-height: 720px;
+
+@mixin maxscreen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: $max-width;
+  height: $max-height;
+}
+
+$background: #001424;
+$element: #233345;
+$current: #def0ff;
+$selected: #ba9d5a;
+$text: #def0ff;
+$text-inverted: $background;
