@@ -116,6 +116,9 @@ export class QueryService {
     });
   }
 
+  /**
+   * Get channels list
+   */
   public queryChannels(): Observable<ChannelsResponse> {
     return this.http.post<ChannelsResponse>(
       'http://195.34.49.38:32100/VSP/V3/QueryAllChannel',
@@ -178,7 +181,6 @@ export class QueryService {
 
   // ---------------------------------------------------------
   // Private methods
-
   private get csrf(): HttpHeaders {
     return new HttpHeaders({
         'X_CSRFToken': this.csrfToken

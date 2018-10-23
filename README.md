@@ -1,27 +1,56 @@
-# TestEpgAngular
+# Тестовое задание
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.4.
+Нужно сделать телепрограмму, как на приложенной картинке.
 
-## Development server
+В репозитории скелет приложения.
+Можно менять всё, кроме `query.service.ts` -
+если его неправильно отредактировать, то поломаются запросы на сервер.
+При верстке нужно использвать цвета, определенные в файле `definitions.scss`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Требования к приложению
+EPG должен позволять:
 
-## Code scaffolding
+1. Отображение номера канала (номер - это позиция канала в channelDetails,
+нумерация начинается с 1), логотипа канала - logo
+(если нет логотипа - то название канала name).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+2. Прокрутку на 2 суток назад и вперед.
+При прокрутке должна меняться дата и строка времени.
 
-## Build
+3. Отображение и скрытие вертикальной полосы текущего времени.
+Полоса должна двигаться при просмотре страницы в соответствии с текущем временем.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+4. Отображение программ для канала на выбранное время.
+Если программа идет сейчас, она должна быть выделена.
+Используется свойство name из ответа сервера.
 
-## Running unit tests
+5. Отображение детальной информации о выбранной передаче.
+Используются свойства name, introduce, picture.posters[0] и rating.
+Все - при наличии. Например, у передачи может не быть описания,
+и/или постера, и/или возрастного рейтинга.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+6. Прокрутка по вертикали - чтобы можно было посмотреть все каналы.
 
-## Running end-to-end tests
+7. Навигация по горизонтали и вертикали только с клавиатуры,
+стрелками. Мышь не используется вообще.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+![картинка, как должно выглядеть](HOW-IT-LOOKS.png)
 
-## Further help
+## Запуск приложения
+Приложение работает через Angular CLI: `ng serve`
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Замечание о CORS
+Сервер не поддерживает CORS.
+Чтобы запросы работали правильно, нужно запустить браузер с отключенной безопасностью.
+Это можно сделать для Chrome/Chromium
+
+1. Закрыть все окна браузера.
+
+2. Запустить браузер из командной строки (или изменить ярлык) с параметрами:
+`--disable-web-security --user-data-dir -–allow-file-access-from-files --ignore-certificate-errors`
+
+Тогда кросс-доменные запросы заработают.
+
+Пример для Linux:
+
+`/home/user$ chromium-browser --disable-web-security --user-data-dir -–allow-file-access-from-files --ignore-certificate-errors`
