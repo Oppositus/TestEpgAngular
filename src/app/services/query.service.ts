@@ -102,7 +102,7 @@ export class QueryService {
 
         this.auth().subscribe((authResult: AuthResponse) => {
 
-          this.csrfToken = authResult.csrfToken;
+          this.csrfToken = authResult.csrfToken || null;
           this.heartbeat().subscribe((heartbeatResult: HeartbeatResponse) => {
 
             this.updateUserFilter(heartbeatResult);
@@ -121,7 +121,7 @@ export class QueryService {
    */
   public queryChannels(): Observable<ChannelsResponse> {
     return this.http.post<ChannelsResponse>(
-      'http://195.34.49.38:32100/VSP/V3/QueryAllChannel',
+      'http://212.30.186.97:33200/VSP/V3/QueryAllChannel',
       {
         isReturnAllMedia: '1'
       },
@@ -141,7 +141,7 @@ export class QueryService {
    */
   public queryEpg(channels: Array<string>, timeFrom: number, timeTo: string): Observable<EpgResponse> {
     return this.http.post<any>(
-      'http://195.34.49.38:32100/VSP/V3/QueryPlaybillList?scene=EpgTVguide&SID=queryplaybilllist6',
+      'http://212.30.186.97:33200/VSP/V3/QueryPlaybillList?scene=EpgTVguide&SID=queryplaybilllist6',
       {
         queryChannel: {
           channelIDs: channels
@@ -169,7 +169,7 @@ export class QueryService {
    */
   public queryDetails(playbillID: string): Observable<DetailsResponse> {
     return this.http.post<DetailsResponse>(
-      'http://195.34.49.38:32100/VSP/V3/GetPlaybillDetail?SID=getplaybilldetail1',
+      'http://212.30.186.97:33200/VSP/V3/GetPlaybillDetail?SID=getplaybilldetail1',
       {
         playbillID
       },
@@ -182,10 +182,11 @@ export class QueryService {
   // ---------------------------------------------------------
   // Private methods
   private get csrf(): HttpHeaders {
-    return new HttpHeaders({
-        'X_CSRFToken': this.csrfToken
-      }
-    );
+    const headers = {};
+    if (this.csrfToken) {
+      headers['X_CSRFToken'] = this.csrfToken;
+    }
+    return new HttpHeaders(headers);
   }
 
   private updateUserFilter(response: HeartbeatResponse): void {
@@ -199,7 +200,7 @@ export class QueryService {
 
   private login(): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(
-      'http://195.34.49.38:32100/VSP/V3/Login',
+      'http://212.30.186.97:33200/VSP/V3/Login',
       {
         subscriberID: 'smartit_1',
         deviceModel: 'SmartTV'
@@ -209,16 +210,14 @@ export class QueryService {
 
   private auth(): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(
-      'http://195.34.49.38:32100/VSP/V3/Authenticate',
+      'http://212.30.186.97:33200/VSP/V3/Authenticate',
       {
         authenticateBasic: {
-          userType: '1',
+          userType: '3',
           isSupportWebpImgFormat: '1',
           needPosterTypes: ['1', '2', '3', '4', '5', '6', '7'],
           timeZone: 'Europe/Moscow',
           lang: 'ru',
-          userID: 'smartit_1',
-          clientPasswd: 'aA1111',
           authType: '0',
           pageTrackerUIType: 'HW_STB_EPGUI'
         },
@@ -239,7 +238,7 @@ export class QueryService {
 
   private heartbeat(): Observable<HeartbeatResponse> {
     return this.http.post<HeartbeatResponse>(
-      'http://195.34.49.38:32100/VSP/V3/OnLineHeartbeat',
+      'http://212.30.186.97:33200/VSP/V3/OnLineHeartbeat',
       {},
       {
         headers: this.csrf
