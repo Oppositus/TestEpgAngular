@@ -9,6 +9,7 @@ export interface ResultResponse {
 
 export interface LoginResponse {
   result: ResultResponse;
+  vspHttpsURL: string;
 }
 
 export interface AuthResponse {
@@ -87,6 +88,7 @@ export interface DetailsResponse {
 
 @Injectable()
 export class QueryService {
+  private vspHttpsURL: string;
   private csrfToken: string;
   private userFilter: string = null;
 
@@ -98,7 +100,9 @@ export class QueryService {
   // API
   public async authenticate(): Promise<string | void> {
     return new Promise<void>((resolve, reject) => {
-      this.login().subscribe(() => {
+      this.login().subscribe((loginResult: LoginResponse) => {
+
+        this.vspHttpsURL = loginResult.vspHttpsURL;
 
         this.auth().subscribe((authResult: AuthResponse) => {
 
@@ -121,7 +125,7 @@ export class QueryService {
    */
   public queryChannels(): Observable<ChannelsResponse> {
     return this.http.post<ChannelsResponse>(
-      'http://212.30.186.97:33200/VSP/V3/QueryAllChannel',
+      `${this.vspHttpsURL}/VSP/V3/QueryAllChannel`,
       {
         isReturnAllMedia: '1'
       },
@@ -141,7 +145,7 @@ export class QueryService {
    */
   public queryEpg(channels: Array<string>, timeFrom: number, timeTo: string): Observable<EpgResponse> {
     return this.http.post<any>(
-      'http://212.30.186.97:33200/VSP/V3/QueryPlaybillList?scene=EpgTVguide&SID=queryplaybilllist6',
+      `${this.vspHttpsURL}/VSP/V3/QueryPlaybillList?scene=EpgTVguide&SID=queryplaybilllist6`,
       {
         queryChannel: {
           channelIDs: channels
@@ -169,7 +173,7 @@ export class QueryService {
    */
   public queryDetails(playbillID: string): Observable<DetailsResponse> {
     return this.http.post<DetailsResponse>(
-      'http://212.30.186.97:33200/VSP/V3/GetPlaybillDetail?SID=getplaybilldetail1',
+      `${this.vspHttpsURL}/VSP/V3/GetPlaybillDetail?SID=getplaybilldetail1`,
       {
         playbillID
       },
@@ -200,7 +204,7 @@ export class QueryService {
 
   private login(): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(
-      'http://212.30.186.97:33200/VSP/V3/Login',
+      'https://mtstv.mts.ru/VSP/V3/Login',
       {
         subscriberID: 'smartit_1',
         deviceModel: 'SmartTV'
@@ -210,7 +214,7 @@ export class QueryService {
 
   private auth(): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(
-      'http://212.30.186.97:33200/VSP/V3/Authenticate',
+      `${this.vspHttpsURL}/VSP/V3/Authenticate`,
       {
         authenticateBasic: {
           userType: '3',
@@ -238,7 +242,7 @@ export class QueryService {
 
   private heartbeat(): Observable<HeartbeatResponse> {
     return this.http.post<HeartbeatResponse>(
-      'http://212.30.186.97:33200/VSP/V3/OnLineHeartbeat',
+      `${this.vspHttpsURL}/VSP/V3/OnLineHeartbeat`,
       {},
       {
         headers: this.csrf
